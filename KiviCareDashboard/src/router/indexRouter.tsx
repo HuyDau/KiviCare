@@ -54,228 +54,226 @@ import ProtectedRoute from '@/components/ProtectedRoute';
 import { Navigate, RouteObject } from 'react-router-dom';
 
 export const IndexRouter: RouteObject[] = [
-    {
-        path: '/',
-        element: <SimpleLayout />,
+  {
+    path: "/",
+    element: <SimpleLayout />,
+    children: [
+      {
+        path: "/",
+        element: <Navigate to="auth/login" replace />, // Redirect root to Sign Up
+      },
+      {
+        path: "auth/login",
+        element: <Login />,
+      },
+      {
+        path: "auth/confirm-mail",
+        element: <ConfirmMail />,
+      },
+      {
+        path: "auth/recoverpw",
+        element: <RecoverPwd />,
+      },
+      {
+        path: "auth/lock-screen",
+        element: <LockScreen />,
+      },
+      // Utilities
+      {
+        path: "errors/maintenance",
+        element: <Maintenance />,
+      },
+      {
+        path: "errors/error404",
+        element: <Error404 />,
+      },
+      {
+        path: "errors/error500",
+        element: <Error500 />,
+      },
+    ],
+  },
+  {
+    path: "/",
+    element: <ProtectedRoute />,
+    children: [
+      {
+        path: "",
+        element: <IndexLayout />,
         children: [
-            {
-                path: '/',
-                element: <Navigate to="auth/login" replace />, // Redirect root to Sign Up
-            },
-            {
-                path: 'auth/login',
-                element: <Login />
-            }, 
-            {
-                path: 'auth/confirm-mail',
-                element: <ConfirmMail />
-            },
-            {
-                path: 'auth/recoverpw',
-                element: <RecoverPwd />
-            },
-            {
-                path: 'auth/lock-screen',
-                element: <LockScreen />
-            },
-             // Utilities
-             {
-                path: 'errors/maintenance',
-                element: <Maintenance />            
-            },
-            {
-                path: 'errors/error404',
-                element: <Error404 />
-            },
-            {
-                path: 'errors/error500',
-                element: <Error500 />
-            },            
-        ]
-    },
-    {
-        path: '/',
-        element: <ProtectedRoute />,
-        children: [{
-            path: '',
-            element: <IndexLayout/>,
-            children : [
-                {
-                    path: '',
-                    element: <Index />
-                },
-                {
-                    path: 'appointment',
-                    element: <Appointment />
-                },            
-                {
-                    path: 'report',
-                    element: <Report />
-                },
-                {
-                    path: 'doctors',
-                    element: <Doctors />
-                },
-                {
-                    path: 'patient',
-                    element: <Patient />
-                },
-                {
-                    path: 'category',
-                    element: <Category />
-                },
-                {
-                    path: 'products',
-                    element: <Product />
-                },
-                {
-                    path: 'payment',
-                    element: <Payment />
-                },
-                {
-                    path: 'helpsupport',
-                    element: <HelpSupport />
-                },
-                {
-                    path: 'setting',
-                    element: <Setting />
-                }
-            ]
-        }],
-    }
-    
-    // {
-    //     path: '/',
-    //     element: <DefaultLayout/>,
-    //     children : [
-           
-    //         {
-    //             path: 'component',
-    //             element: <UiComponent />
-    //         }, 
-    //         {
-    //             path: 'color',
-    //             element: <Color />
-    //         }, 
-            
-    //         // User
-    //         {
-    //             path: 'app/user-profile',
-    //             element: <UserProfile />
-    //         },
-    //         {
-    //             path: 'app/user-add',
-    //             element: <AddUser />
-    //         },
-    //         {
-    //             path: 'app/user-list',
-    //             element: <UserList />
-    //         },
-    //         {
-    //             path: 'app/user-privacy-setting',
-    //             element: <UserProfileSetting />
-    //         },
-    //         // Widgets
-    //         {
-    //             path: 'widget/widgetbasic',
-    //             element: <WidgetBasic />
-    //         },
-    //         {
-    //             path: 'widget/widgetchart',
-    //             element: <WidgetChart />
-    //         },
-    //         {
-    //             path: 'widget/widgetcard',
-    //             element: <WidgetCard />
-    //         },
-    //         // Map
-    //         {
-    //             path: 'maps/google',
-    //             element: <MapGoogle />
-    //         },
-    //         {
-    //             path: 'maps/vector',
-    //             element: <MapVector />
-    //         },
-    //         // Form
-    //         {
-    //             path: 'form/form-element',
-    //             element: <FormElement />
-    //         },
-    //         {
-    //             path: 'form/form-validation',
-    //             element: <FormValidation />
-    //         },
-    //         // Table
-    //         {
-    //             path: 'table/bootstrap-table',
-    //             element: <TableBootstrap />
-    //         },
-    //         {
-    //             path: 'table/table-data',
-    //             element: <TableData />
-    //         },
-    //         {
-    //             path: 'table/border-table',
-    //             element: <TableBorder />
-    //         },
-    //         {
-    //             path: 'table/fancy-table',
-    //             element: <TableFancy />
-    //         },
-    //         {
-    //             path: 'table/fixed-table',
-    //             element: <TableFixed />
-    //         },
-    //         // Icons
-    //         {
-    //             path: 'icons/solid',
-    //             element: <IconSolid />
-    //         },
-    //         {
-    //             path: 'icons/outline',
-    //             element: <IconOutline />
-    //         },
-    //         {
-    //             path: 'icons/dual-tone',
-    //             element: <IconDual />
-    //         },
-    //         {
-    //             path: 'extra/privacy-policy',
-    //             element: <PrivacyPolicy />
-    //         },
-    //         {
-    //             path: 'extra/terms-of-service',
-    //             element: <TermsOfService />
-    //         },
+          {
+            path: "home",
+            element: <Index />,
+          },
+          {
+            path: "appointment",
+            element: <Appointment />,
+          },
+          {
+            path: "report",
+            element: <Report />,
+          },
+          {
+            path: "doctors",
+            element: <Doctors />,
+          },
+          {
+            path: "patient",
+            element: <Patient />,
+          },
+          {
+            path: "category",
+            element: <Category />,
+          },
+          {
+            path: "products",
+            element: <Product />,
+          },
+          {
+            path: "payment",
+            element: <Payment />,
+          },
+          {
+            path: "helpsupport",
+            element: <HelpSupport />,
+          },
+          {
+            path: "setting",
+            element: <Setting />,
+          },
+        ],
+      },
+      {
+        path: "/",
+        element: <DefaultLayout />,
+        children: [
+          {
+            path: "component",
+            element: <UiComponent />,
+          },
+          {
+            path: "color",
+            element: <Color />,
+          },
 
-    //     ]
-    // },
-    // {
-    //     path: '/',
-    //     element: <HorizontalLayout />,
-    //     children: [
-    //         {
-    //             path: 'patient-dashboard',
-    //             element: <PatientDashboard />
-    //         },
-    //         {
-    //             path: 'patient-appointment',
-    //             element: <PatientAppointment />
-    //         },
-    //         {
-    //             path: 'patient-encounters',
-    //             element: <PatientEncounters />
-    //         },
-    //         {
-    //             path: 'patient-doctors',
-    //             element: <PatientDoctor />
-    //         },
-    //         {
-    //             path: 'patient-payments',
-    //             element: <PatientPayment />
-    //         }
-    //     ]
-    // },
-    
-]
+          // User
+          {
+            path: "app/user-profile",
+            element: <UserProfile />,
+          },
+          {
+            path: "app/user-add",
+            element: <AddUser />,
+          },
+          {
+            path: "app/user-list",
+            element: <UserList />,
+          },
+          {
+            path: "app/user-privacy-setting",
+            element: <UserProfileSetting />,
+          },
+          // Widgets
+          {
+            path: "widget/widgetbasic",
+            element: <WidgetBasic />,
+          },
+          {
+            path: "widget/widgetchart",
+            element: <WidgetChart />,
+          },
+          {
+            path: "widget/widgetcard",
+            element: <WidgetCard />,
+          },
+          // Map
+          {
+            path: "maps/google",
+            element: <MapGoogle />,
+          },
+          {
+            path: "maps/vector",
+            element: <MapVector />,
+          },
+          // Form
+          {
+            path: "form/form-element",
+            element: <FormElement />,
+          },
+          {
+            path: "form/form-validation",
+            element: <FormValidation />,
+          },
+          // Table
+          {
+            path: "table/bootstrap-table",
+            element: <TableBootstrap />,
+          },
+          {
+            path: "table/table-data",
+            element: <TableData />,
+          },
+          {
+            path: "table/border-table",
+            element: <TableBorder />,
+          },
+          {
+            path: "table/fancy-table",
+            element: <TableFancy />,
+          },
+          {
+            path: "table/fixed-table",
+            element: <TableFixed />,
+          },
+          // Icons
+          {
+            path: "icons/solid",
+            element: <IconSolid />,
+          },
+          {
+            path: "icons/outline",
+            element: <IconOutline />,
+          },
+          {
+            path: "icons/dual-tone",
+            element: <IconDual />,
+          },
+          {
+            path: "extra/privacy-policy",
+            element: <PrivacyPolicy />,
+          },
+          {
+            path: "extra/terms-of-service",
+            element: <TermsOfService />,
+          },
+        ],
+      },
+      {
+        path: "/",
+        element: <HorizontalLayout />,
+        children: [
+          {
+            path: "patient-dashboard",
+            element: <PatientDashboard />,
+          },
+          {
+            path: "patient-appointment",
+            element: <PatientAppointment />,
+          },
+          {
+            path: "patient-encounters",
+            element: <PatientEncounters />,
+          },
+          {
+            path: "patient-doctors",
+            element: <PatientDoctor />,
+          },
+          {
+            path: "patient-payments",
+            element: <PatientPayment />,
+          },
+        ],
+      },
+    ],
+  },
+];

@@ -10,4 +10,5 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<com.example.KiviCareBe.entity.User.User, Long> {
     @Query("Select u from User u where u.email= :email")
     Optional<User> findByEmail(String email);
+
 }

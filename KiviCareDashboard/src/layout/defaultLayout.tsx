@@ -1,29 +1,12 @@
 import React, { memo, Fragment } from "react";
-
-// router-dom
 import { Outlet } from "react-router-dom";
-
-// header
 import Header from '../components/partial/header'
-
-// sidebar 
 import Sidebar from "../components/partial/sidebar";
-
-// footer
 import Footer from "../components/partial/footer";
-
-// Sub Header
 import SubHeader from "../components/partial/sub-header";
-
-// setting custimzor
 import SettingOffCanvas from '../components/setting/SettingOffCanvas'
-
-// Import selectors & action from setting store
 import * as SettingSelector from "../store/setting/selectors";
-
-// Redux Selector / Action
 import { useSelector } from "react-redux";
-
 import { useLocation } from "react-router-dom";
 
 const DefaultLayout = memo((props) => {
@@ -44,11 +27,6 @@ const DefaultLayout = memo((props) => {
                 <SettingOffCanvas BannerStyle={true} />
                 <Footer />
             </main>
-            {/* {
-                props.isHeader === 'true' && 
-
-            <h1>Default Layout</h1>
-            } */}
         </Fragment>
     )
 })

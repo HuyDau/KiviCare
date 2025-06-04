@@ -1,7 +1,9 @@
 package com.example.KiviCareBe.service.User;
 
 
+import com.example.KiviCareBe.dto.User.UserDto;
 import com.example.KiviCareBe.dto.User.request.UserCreateRequest;
+import com.example.KiviCareBe.dto.User.response.ListUserResponse;
 import com.example.KiviCareBe.dto.User.response.UserCreateResponse;
 
 import com.example.KiviCareBe.entity.User.User;
@@ -13,12 +15,17 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import com.example.KiviCareBe.entity.User.Role;
 import com.example.KiviCareBe.entity.User.UserHasRole;
+import org.modelmapper.ModelMapper;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
 
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -30,6 +37,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final RoleRepository roleRepository;
     private final MailService mailService;
+    private final ModelMapper modelMapper;
 
     public UserCreateResponse createUser(UserCreateRequest request) {
         if (request.getEmail() == null || request.getEmail().trim().isEmpty()) {
@@ -77,5 +85,19 @@ public class UserService {
                 .date_of_birth(user.getDateOfBirth())
                 .username(user.getUsername())
                 .build();
+    }
+
+    public ListUserResponse getAllUsers() {
+        try {
+            List<User> users = userRepository.findAll();
+            List<UserDto> userDTOs = users.stream()
+                    .map(user -> modelMapper.map(user, UserDto.class))
+                    .collect(Collectors.toList());
+
+            return new ListUserResponse(userDTOs, "Users fetched successfully.");
+
+        } catch (Exception e) {
+            return new ListUserResponse(500, "An error occurred while fetching users: " + e.getMessage());
+        }
     }
 }

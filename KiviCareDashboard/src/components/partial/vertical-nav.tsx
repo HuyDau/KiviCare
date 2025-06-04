@@ -1,45 +1,44 @@
 import React,{memo,Fragment,useState,useContext} from 'react'
-
 import { Accordion,OverlayTrigger,Tooltip,AccordionContext,useAccordionButton } from 'react-bootstrap'
 import { Link,useLocation } from 'react-router-dom'
-
-// componets
 import SidebarMenu from './sidebar/sidebar-menu';
 
-function CustomToggle({ children, eventKey, onClick }) {
+interface CustomToggleProps {
+    children: React.ReactNode;
+    eventKey: string;
+    active?: boolean;
+    onClick: (args: { state: boolean; eventKey: string }) => void;
+}
 
+const CustomToggle: React.FC<CustomToggleProps> = ({ children, eventKey, active, onClick }) => {
     const { activeEventKey } = useContext(AccordionContext);
-
-    const decoratedOnClick = useAccordionButton(eventKey, (active) => onClick({ state: !active, eventKey: eventKey }));
-
+    const decoratedOnClick = useAccordionButton(eventKey, (event) => { const isActive = activeEventKey === eventKey;  onClick({ state: !isActive, eventKey }); });
     const isCurrentEventKey = activeEventKey === eventKey;
 
     return (
-        <Link to="#" aria-expanded={isCurrentEventKey ? 'true' : 'false'} className={`${activeEventKey === eventKey ? 'active' : ''} nav-link`} role="button" onClick={(e) => {
-            decoratedOnClick(isCurrentEventKey)
-        }}>
+        <Link  to="#"  aria-expanded={isCurrentEventKey ? 'true' : 'false'}  className={`${isCurrentEventKey ? 'active' : ''} nav-link`}  role="button"  onClick={(e) => { e.preventDefault();  decoratedOnClick(e); }}>
             {children}
         </Link>
     );
-}
+};
 
 const VerticalNav = memo(() => {
-    const [activeMenu, setActiveMenu] = useState(false)
-    const [active, setActive] = useState('')
+    const [activeMenu, setActiveMenu] = useState<boolean>(false)
+    const [active, setActive] = useState<string>('')
     //location
     let location = useLocation();
     return (
         <Fragment>
             <Accordion as="ul" className="navbar-nav iq-main-menu" id="sidebar-menu">
                 <li className="nav-item static-item">
-                    <Link className="nav-link static-item disabled text-start" to="#" tabIndex="-1">
+                    <Link className="nav-link static-item disabled text-start" to="#" tabIndex={-1}>
                         <span className="default-icon">Home</span>
                         <span className="mini-icon" data-bs-toggle="tooltip" title="Home" data-bs-placement="right">-</span>
                     </Link>
                 </li>
 
                 <Accordion.Item as="li" eventKey="dashboard" bsPrefix={`nav-item ${active === 'dashboard' ? 'active' : ''} `} onClick={() => setActive('dashboard')}>
-                    <CustomToggle eventKey="dashboard" active={activeMenu === 'dashboard' ? true : false} onClick={(activeKey) => setActiveMenu(activeKey)} >
+                    <CustomToggle  eventKey="dashboard"  active={active === 'dashboard'? true : false}   onClick={({ state, eventKey }) => { setActive(eventKey); setActiveMenu(!activeMenu);  }} >
                         <OverlayTrigger placement="right" overlay={<Tooltip>Menu Style</Tooltip>}>
                             <i className="icon" data-bs-toggle="tooltip" title="Dashboard" data-bs-placement="right">
                                 <svg width="20" className="icon-20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -128,7 +127,7 @@ const VerticalNav = memo(() => {
                 </li>
 
                 <li className="nav-item static-item">
-                    <Link className="nav-link static-item disabled text-start" to="#" tabIndex="-1">
+                    <Link className="nav-link static-item disabled text-start" to="#" tabIndex={-1}>
                         <span className="default-icon">Pages</span>
                         <span className="mini-icon" data-bs-toggle="tooltip" title="Pages" data-bs-placement="right">-</span>
                     </Link>
@@ -207,7 +206,7 @@ const VerticalNav = memo(() => {
                 </li>
 
                 <li className="nav-item static-item">
-                    <Link className="nav-link static-item disabled text-start" to="#" tabIndex="-1">
+                    <Link className="nav-link static-item disabled text-start" to="#" tabIndex={-1}>
                         <span className="default-icon">Settings</span>
                         <span className="mini-icon" data-bs-toggle="tooltip" title="Setting" data-bs-placement="right">-</span>
                     </Link>
@@ -244,7 +243,7 @@ const VerticalNav = memo(() => {
                 </li>
 
                 <li className="nav-item static-item">
-                    <Link className="nav-link static-item disabled text-start" to="#" tabIndex="-1">
+                    <Link className="nav-link static-item disabled text-start" to="#" tabIndex={-1}>
                         <span className="default-icon">Special Pages</span>
                         <span className="mini-icon" data-bs-toggle="tooltip" title="Special Pages" data-bs-placement="right">-</span>
                     </Link>
@@ -280,7 +279,7 @@ const VerticalNav = memo(() => {
                 </SidebarMenu>
 
                 <Accordion.Item as="li" eventKey="auth-skins" bsPrefix={`nav-item ${active === 'auth-skins' ? 'active' : ''} `} onClick={() => setActive('auth-skins')}>
-                    <CustomToggle eventKey="auth-skins" active={activeMenu === 'auth-skins' ? true : false} onClick={(activeKey) => setActiveMenu(activeKey)} >
+                    <CustomToggle eventKey="auth-skins" active={active === 'auth-skins' ? true : false} onClick={({ state, eventKey }) => { setActive(eventKey); setActiveMenu(!activeMenu);  }} >
                         <OverlayTrigger placement="right" overlay={<Tooltip>Auth Skins</Tooltip>}>
                             <i className="icon" data-bs-toggle="tooltip" title="Auth Skins" data-bs-placement="right">
                                 <svg className="icon-20" width="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -357,7 +356,7 @@ const VerticalNav = memo(() => {
                 </Accordion.Item>
 
                 <Accordion.Item as="li" eventKey="sidebar-user" bsPrefix={`nav-item ${active === 'sidebar-user' ? 'active' : ''} `} onClick={() => setActive('sidebar-user')}>
-                    <CustomToggle eventKey="sidebar-user" active={activeMenu === 'sidebar-user' ? true : false} onClick={(activeKey) => setActiveMenu(activeKey)} >
+                    <CustomToggle eventKey="sidebar-user" active={active === 'sidebar-user' ? true : false} onClick={({ state, eventKey }) => { setActive(eventKey); setActiveMenu(!activeMenu);  }} >
                         <OverlayTrigger placement="right" overlay={<Tooltip>User</Tooltip>}>
                             <i className="icon" data-bs-toggle="tooltip" title="Users" data-bs-placement="right">
                                 <svg width="20" className="icon-20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -411,7 +410,7 @@ const VerticalNav = memo(() => {
                 </Accordion.Item>
 
                 <Accordion.Item as="li" eventKey="utilities-error" bsPrefix={`nav-item ${active === 'utilities-error' ? 'active' : ''} `} onClick={() => setActive('utilities-error')}>
-                    <CustomToggle eventKey="utilities-error" active={activeMenu === 'utilities-error' ? true : false} onClick={(activeKey) => setActiveMenu(activeKey)} >
+                    <CustomToggle eventKey="utilities-error" active={active === 'utilities-error' ? true : false} onClick={({ state, eventKey }) =>  { setActive(eventKey); setActiveMenu(!activeMenu);  }} >
                         <OverlayTrigger placement="right" overlay={<Tooltip>Utilities</Tooltip>}>
                             <i className="icon" data-bs-toggle="tooltip" title="Utilities" data-bs-placement="right">
                                 <svg width="20" className="icon-20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -468,7 +467,7 @@ const VerticalNav = memo(() => {
                 </Accordion.Item>
 
                 <Accordion.Item as="li" eventKey="sidebar-widget" bsPrefix={`nav-item ${active === 'sidebar-widget' ? 'active' : ''} `} onClick={() => setActive('sidebar-widget')}>
-                    <CustomToggle eventKey="sidebar-widget" active={activeMenu === 'sidebar-widget' ? true : false} onClick={(activeKey) => setActiveMenu(activeKey)} >
+                    <CustomToggle eventKey="sidebar-widget" active={active === 'sidebar-widget' ? true : false} onClick={({ state, eventKey }) => { setActive(eventKey); setActiveMenu(!activeMenu);  }} >
                         <OverlayTrigger placement="right" overlay={<Tooltip>Widgets</Tooltip>}>
                             <i className="icon" data-bs-toggle="tooltip" title="Widgets" data-bs-placement="right">
                                 <svg width="20" className="icon-20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -525,7 +524,7 @@ const VerticalNav = memo(() => {
                 </Accordion.Item>
 
                 <Accordion.Item as="li" eventKey="sidebar-maps" bsPrefix={`nav-item ${active === 'sidebar-maps' ? 'active' : ''} `} onClick={() => setActive('sidebar-maps')}>
-                    <CustomToggle eventKey="sidebar-maps" active={activeMenu === 'sidebar-maps' ? true : false} onClick={(activeKey) => setActiveMenu(activeKey)} >
+                    <CustomToggle eventKey="sidebar-maps" active={active === 'sidebar-maps' ? true : false} onClick={({ state, eventKey }) => { setActive(eventKey); setActiveMenu(!activeMenu);}} >
                         <OverlayTrigger placement="right" overlay={<Tooltip>Map</Tooltip>}>
                             <i className="icon" data-bs-toggle="tooltip" title="Maps" data-bs-placement="right">
                                 <svg width="20" className="icon-20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -570,7 +569,7 @@ const VerticalNav = memo(() => {
                 </Accordion.Item>
 
                 <Accordion.Item as="li" eventKey="sidebar-form" bsPrefix={`nav-item ${active === 'sidebar-form' ? 'active' : ''} `} onClick={() => setActive('sidebar-form')}>
-                    <CustomToggle eventKey="sidebar-form" active={activeMenu === 'sidebar-form' ? true : false} onClick={(activeKey) => setActiveMenu(activeKey)} >
+                    <CustomToggle eventKey="sidebar-form" active={active === 'sidebar-form' ? true : false} onClick={({ state, eventKey }) => { setActive(eventKey); setActiveMenu(!activeMenu);  }} >
                         <OverlayTrigger placement="right" overlay={<Tooltip>Form</Tooltip>}>
                             <i className="icon" data-bs-toggle="tooltip" title="Form" data-bs-placement="right">
                                 <svg width="20" className="icon-20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -617,7 +616,7 @@ const VerticalNav = memo(() => {
                 </Accordion.Item>
 
                 <Accordion.Item as="li" eventKey="sidebar-table" bsPrefix={`nav-item ${active === 'sidebar-table' ? 'active' : ''} `} onClick={() => setActive('sidebar-table')}>
-                    <CustomToggle eventKey="sidebar-table" active={activeMenu === 'sidebar-table' ? true : false} onClick={(activeKey) => setActiveMenu(activeKey)} >
+                    <CustomToggle eventKey="sidebar-table" active={active === 'sidebar-table' ? true : false} onClick={({ state, eventKey }) => { setActive(eventKey); setActiveMenu(!activeMenu);  }} >
                         <OverlayTrigger placement="right" overlay={<Tooltip>Table</Tooltip>}>
                             <i className="icon" data-bs-toggle="tooltip" title="Table" data-bs-placement="right">
                                 <svg className="icon-20" xmlns="http://www.w3.org/2000/svg" width="20" viewBox="0 0 24 24" fill="none">
@@ -693,7 +692,7 @@ const VerticalNav = memo(() => {
                 </Accordion.Item>
 
                 <Accordion.Item as="li" eventKey="sidebar-icons" bsPrefix={`nav-item ${active === 'sidebar-icons' ? 'active' : ''} `} onClick={() => setActive('sidebar-icons')}>
-                    <CustomToggle eventKey="sidebar-icons" active={activeMenu === 'sidebar-icons' ? true : false} onClick={(activeKey) => setActiveMenu(activeKey)} >
+                    <CustomToggle eventKey="sidebar-icons" active={active === 'sidebar-icons' ? true : false} onClick={({ state, eventKey }) => { setActive(eventKey); setActiveMenu(!activeMenu);  }} >
                         <OverlayTrigger placement="right" overlay={<Tooltip>Icons</Tooltip>}>
                             <i className="icon" data-bs-toggle="tooltip" title="Icons" data-bs-placement="right">
                                 <svg className="icon-20" xmlns="http://www.w3.org/2000/svg" width="20" viewBox="0 0 24 24"

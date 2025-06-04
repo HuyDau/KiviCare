@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Fragment } from 'react'
 import { Card, Col, Container, Row, Form, FormCheck, Button } from 'react-bootstrap'
 import Logo from '../../components/widget/logo'
@@ -6,14 +6,23 @@ import { Link, useNavigate } from 'react-router-dom'
 import authbg from '/assets/images/dashboard/sign-in.jpg'
 import { useAuth } from '@/context/AuthContext'
 import { LoginRequest } from '@/api/Login/LoginModel'
-import {login} from '@/api/Login/Login'
+import {loginAccount} from '@/api/Login/Login'
 
 const Login: React.FC = () => {
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
     const [loading, setLoading] = useState<boolean>(false)
     const [error, setError] = useState<string>('')
+    const { login } = useAuth();
     const navigate = useNavigate()
+
+    useEffect(() => {
+        const token = localStorage.getItem('token'); 
+
+        if (token) {
+            navigate('/component');
+        }
+    }, []);
 
     const handleSubmit = async (e: React.FormEvent) => {
       e.preventDefault();
@@ -25,17 +34,15 @@ const Login: React.FC = () => {
             email: email,
             password: password,
         }
-        const res = await login(requestData);
+        const res = await loginAccount(requestData);
 
         if (!res) {
           throw new Error("Đăng nhập thất bại");
         }else{
-             console.log('res', res)
-             setLoading(false);
+            login(res.data.accessToken)
+            setLoading(false);
         }
-       
-        // login(data.token);
-        // navigate("/");
+        navigate("/component");
       } catch (err) {
         setError(err.message || "Đã xảy ra lỗi khi đăng nhập");
       } finally {
