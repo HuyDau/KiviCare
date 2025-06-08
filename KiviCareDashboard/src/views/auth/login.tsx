@@ -7,6 +7,8 @@ import authbg from '/assets/images/dashboard/sign-in.jpg'
 import { useAuth } from '@/context/AuthContext'
 import { LoginRequest } from '@/api/Login/LoginModel'
 import {loginAccount} from '@/api/Login/Login'
+import { GoogleLogin } from '@react-oauth/google';
+import { jwtDecode } from "jwt-decode";
 
 const Login: React.FC = () => {
     const [email, setEmail] = useState<string>('');
@@ -39,7 +41,7 @@ const Login: React.FC = () => {
         if (!res) {
           throw new Error("Đăng nhập thất bại");
         }else{
-            login(res.data.accessToken)
+            login(res.data.token)
             setLoading(false);
         }
         navigate("/component");
@@ -49,6 +51,13 @@ const Login: React.FC = () => {
         setLoading(false);
       }
     };
+    const success=(credentialResponse)=>{
+      const decoded = jwtDecode(credentialResponse?.credential)
+      if(decoded){
+         login(credentialResponse?.credential)
+         navigate("/component");
+      }
+    }
     return (
       <Fragment>
         <div
@@ -138,6 +147,14 @@ const Login: React.FC = () => {
                               </>
                             )}
                           </Button>
+                        </div>
+                        <div className="pb-0">
+                          <GoogleLogin
+                            onSuccess={(credentialResponse) => success(credentialResponse)}
+                            onError={() => {
+                              console.log("Login Failed");
+                            }}
+                          />
                         </div>
                       </div>
                     </Form>

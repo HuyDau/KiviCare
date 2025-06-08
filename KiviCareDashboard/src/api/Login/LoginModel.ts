@@ -3,6 +3,9 @@ export interface LoginRequest {
   password: string;
 }
 export interface LoginResponseData {
-  accessToken: string;
-  refreshToken: string;
+  statusCode: number;
+  message: string;
+  token: string;
+  role: string;
+  expirationTime: string
 }
