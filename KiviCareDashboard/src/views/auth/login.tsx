@@ -44,9 +44,9 @@ const Login: React.FC = () => {
             login(res.data.token)
             setLoading(false);
         }
-        navigate("/component");
+        navigate("/home");
       } catch (err) {
-        setError(err.message || "Đã xảy ra lỗi khi đăng nhập");
+        setError( "Sai thông tin đăng nhập");
       } finally {
         setLoading(false);
       }
@@ -55,7 +55,7 @@ const Login: React.FC = () => {
       const decoded = jwtDecode(credentialResponse?.credential)
       if(decoded){
          login(credentialResponse?.credential)
-         navigate("/component");
+         navigate("/home");
       }
     }
     return (
@@ -148,6 +148,9 @@ const Login: React.FC = () => {
                             )}
                           </Button>
                         </div>
+                        {
+                          error ?? <p>{error}</p>
+                        }
                         <div className="pb-0">
                           <GoogleLogin
                             onSuccess={(credentialResponse) => success(credentialResponse)}
